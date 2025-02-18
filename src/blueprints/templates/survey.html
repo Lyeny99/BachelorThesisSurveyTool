@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Limesurvey Tool{% endblock %}
+{% block header %}SURVEY{% endblock %}
+
+{% block content %}
+
+<form action="{{ url_for('routemanager.loadsurveyfromfile') }}" method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">IMPORT DATA</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Survey 1 Section -->
+                        <div class="col-xl-6 col-lg-6">
+                            <h6 class="text-primary">Survey 1</h6>
+                            <div class="mb-3">
+                                <label class="form-label">File 1:</label>
+                                <input type="file" name="file1" accept=".csv" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label>Survey 1 ID:</label>
+                                <input type="text" name="file1_id" placeholder="Enter ID for Survey 1"
+                                       value="{{ file1_id }}" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label>Survey 1 Type:</label>
+                                <input type="text" name="file1_type" placeholder="Enter Type (pre/post) for Survey 1"
+                                       value="{{ file1_type }}" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label>Survey 1 Group:</label>
+                                <input type="text" name="file1_group" placeholder="Enter Group for Survey 1"
+                                       value="{{ file1_group }}" class="form-control">
+                            </div>
+                        </div>
+
+                        <!-- Survey 2 Section -->
+                        <div class="col-xl-6 col-lg-6">
+                            <h6 class="text-primary">Survey 2</h6>
+                            <div class="mb-3">
+                                <label class="form-label">File 2:</label>
+                                <input type="file" name="file2" accept=".csv" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label>Survey 2 ID:</label>
+                                <input type="text" name="file2_id" placeholder="Enter ID for Survey 2"
+                                       value="{{ file2_id }}" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label>Survey 2 Type:</label>
+                                <input type="text" name="file2_type" placeholder="Enter Type (pre/post) for Survey 2"
+                                       value="{{ file2_type }}" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label>Survey 2 Group:</label>
+                                <input type="text" name="file2_group" placeholder="Enter Group for Survey 2"
+                                       value="{{ file2_group }}" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="submit" class="btn btn-primary mb-3">Load Local Data</button>
+    </div>
+</form>
+
+<!-- Display success message -->
+{% if message %}
+<div class="alert alert-success" role="alert">
+    {{ message }}
+</div>
+{% endif %}
+
+<!-- Display error message -->
+{% if error_message %}
+<div class="alert alert-danger" role="alert">
+    {{ error_message }}
+</div>
+{% endif %}
+
+{% endblock %}

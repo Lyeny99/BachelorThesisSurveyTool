@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+{% block title %}Limesurvey Tool{% endblock %}
+{% block header %}DATA{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <!-- Survey 1 Section -->
+    <div class="col-xl-6 col-lg-6 d-flex">
+        <div class="card shadow mb-4 w-100">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">SURVEY {{ survey1.survey_id }}</h6>
+            </div>
+            <div class="card-body d-flex flex-column">
+                <!-- Questions Section -->
+                <div class="mb-4 flex-grow-1" style="max-height: 300px; overflow-y: auto;">
+                    <h5 class="text-primary">QUESTIONS</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Text</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for question in survey1.questions %}
+                                <tr>
+                                    <td>{{ question.question_id }}</td>
+                                    <td>{{ question.question_text }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Participants and Answers Section -->
+                <div class="flex-grow-1" style="max-height: 300px; overflow-y: auto;">
+                    <h5 class="text-primary">RESULTS</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Participant</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for result in survey1.results %}
+                                <tr>
+                                    <td>{{ result.participant_id }}</td>
+                                    <td>
+                                        <button class="btn btn-info btn-sm toggle-answers" data-target="#answers1{{ result.participant_id }}" aria-expanded="false">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="rotate-icon" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                            </svg>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr id="answers1{{ result.participant_id }}" class="collapse">
+                                    <td colspan="2">
+                                        <div style="max-height: 150px; overflow-y: auto;">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Question</th>
+                                                        <th>Answer</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for answer in result.answers %}
+                                                    <tr>
+                                                        <td>{{ survey1_questions_map[answer.question_id] }}</td>
+                                                        <td>{{ answer.answer }}</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Survey 2 Section -->
+    <div class="col-xl-6 col-lg-6 d-flex">
+        <div class="card shadow mb-4 w-100">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">SURVEY {{ survey2.survey_id }}</h6>
+            </div>
+            <div class="card-body d-flex flex-column">
+                <!-- Questions Section -->
+                <div class="mb-4 flex-grow-1" style="max-height: 300px; overflow-y: auto;">
+                    <h5 class="text-primary">QUESTIONS</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Text</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for question in survey2.questions %}
+                                <tr>
+                                    <td>{{ question.question_id }}</td>
+                                    <td>{{ question.question_text }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Participants and Answers Section -->
+                <div class="flex-grow-1" style="max-height: 300px; overflow-y: auto;">
+                    <h5 class="text-primary">RESULTS</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Participant</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for result in survey2.results %}
+                                <tr>
+                                    <td>{{ result.participant_id }}</td>
+                                    <td>
+                                        <button class="btn btn-info btn-sm toggle-answers" data-target="#answers2{{ result.participant_id }}" aria-expanded="false">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="rotate-icon" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                            </svg>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr id="answers2{{ result.participant_id }}" class="collapse">
+                                    <td colspan="2">
+                                        <div style="max-height: 150px; overflow-y: auto;">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Question</th>
+                                                        <th>Answer</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for answer in result.answers %}
+                                                    <tr>
+                                                        <td>{{ survey2_questions_map[answer.question_id] }}</td>
+                                                        <td>{{ answer.answer }}</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Updated JavaScript Imports -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Toggle individual answers
+        $('.toggle-answers').on('click', function () {
+            var target = $(this).data('target');
+            $(target).collapse('toggle');
+            $(this).find('.rotate-icon').toggleClass('rotate-180');
+        });
+    });
+</script>
+
+<style>
+    .rotate-icon {
+        transition: transform 0.3s;
+        vertical-align: middle;
+    }
+    .rotate-180 {
+        transform: rotate(180deg);
+    }
+</style>
+
+{% endblock %}

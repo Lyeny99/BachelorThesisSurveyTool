@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Limesurvey Tool{% endblock %}
+{% block header %}ANALYSIS{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-xl col-lg">
+        <div class="card shadow mb-4">
+            <div
+                class="card-header py-3 d-flex flex-row justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">HYPOTHESIS TEST</h6>
+            </div>
+            <div class="card-body">
+                <div style="height: 100%;" class="chart-area table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Question</th>
+                                <th>Group {{ survey1.group }} ({{ survey1.survey_type }}) AVG</th>
+                                <th>Group {{ survey1.group }} ({{ survey1.survey_type }}) SD</th>
+                                <th>Group {{ survey2.group }} ({{ survey2.survey_type }}) AVG</th>
+                                <th>Group {{ survey2.group }} ({{ survey2.survey_type }}) SD</th>
+                                <th>P-value</th>
+                                <th>Test Used</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for question, result in results.items() %}
+                            <tr>
+                                <td>{{ question }}</td>
+                                <td>{{ result.get(survey1.group + ' (' + survey1.survey_type + ') AVG', 'N/A') }}</td>
+                                <td>{{ result.get(survey1.group + ' (' + survey1.survey_type + ') SD', 'N/A') }}</td>
+                                <td>{{ result.get(survey2.group + ' (' + survey2.survey_type + ') AVG', 'N/A') }}</td>
+                                <td>{{ result.get(survey2.group + ' (' + survey2.survey_type + ') SD', 'N/A') }}</td>
+                                <td>{{ result.get('p-value', 'N/A') }}</td>
+                                <td>{{ result.get('Test Used', 'N/A') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl col-lg">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">CALCULATION</h6>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="/analysis">
+                    <div class="form-group">
+                        <label for="alpha">Alpha (Significance Level):</label>
+                        <input type="number" step="0.001" class="form-control" id="alpha" name="alpha" value="{{ alpha }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="test-method">Test Method:</label>
+                        <select class="form-control" id="test-method" name="test-method">
+                            <option value="automatic" {% if test_method == 'automatic' %}selected{% endif %}>Automatic</option>
+                            <option value="t-test" {% if test_method == 't-test' %}selected{% endif %}>t-test</option>
+                            <option value="wilcoxon" {% if test_method == 'wilcoxon' %}selected{% endif %}>Wilcoxon</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Recalculate</button>
+                </form>
+                {% if message %}
+                <div class="alert alert-{{ 'success' if status == 'success' else 'danger' }} mt-3" role="alert">
+                    {{ message }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl col-lg">
+        <div class="card shadow mb-4">
+            <div
+                class="card-header py-3 d-flex flex-row justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">EXPORT</h6>
+            </div>
+            <div class="card-body">
+                <div style="height: 100%;" class="chart-area table-responsive">
+                    <form action="{{ url_for('routemanager.export_data') }}" method="POST">
+                    <div class="mb-3">
+                        <label for="latex_filename" class="form-label">LaTeX Filename:</label>
+                        <input type="text" id="latex_filename" name="latex_filename" class="form-control"
+                            placeholder="Enter filename for LaTeX export" value="analysis_results.tex">
+                    </div>
+                    <div class="mb-3">
+                        <label for="csv_filename" class="form-label">CSV Filename:</label>
+                        <input type="text" id="csv_filename" name="csv_filename" class="form-control"
+                            placeholder="Enter filename for CSV export" value="dataframe_export.csv">
+                    </div>
+                    <button type="submit" name="export_type" value="latex" class="btn btn-primary">Export LaTeX</button>
+                    <button type="submit" name="export_type" value="csv" class="btn btn-primary">Export CSV</button>
+                    </form>
+                </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

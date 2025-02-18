@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block title %}Limesurvey Tool - Settings{% endblock %}
+{% block header %}SETTINGS{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Chart Color Theme</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="container">
+                        <!-- Form to select and save a theme -->
+                        <form action="{{ url_for('routemanager.save_theme') }}"
+                            method="POST">
+                            <div class="form-group">
+                                <label for="theme">Select Theme:</label>
+                                <select class="form-control" name="theme"
+                                    id="theme"
+                                    onchange="showSelectedPalette(this.value)">
+                                    {% for theme in themes %}
+                                    <option value="{{ theme.name }}" {% if
+                                        selected_theme and selected_theme.name
+                                        == theme.name %}selected{% endif %}>
+                                        {{ theme.name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!-- Preview for the currently chosen palette -->
+                            <div class="mt-3">
+                                <h5>Currently Selected Palette</h5>
+                                <div id="color-preview">
+                                    <ul class="list-inline">
+                                        {% for color in selected_theme.colors %}
+                                        <li class="list-inline-item"
+                                            style="width: 30px; height: 30px; background-color: {{ color }}; border: 1px solid #ddd;"></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Preview for the active palette (applied currently) -->
+                            <div class="mt-3">
+                                <h5>Active Palette (Currently Applied)</h5>
+                                <div id="active-palette">
+                                    <ul class="list-inline">
+                                        {% for color in selected_theme.colors %}
+                                        <li class="list-inline-item"
+                                            style="width: 30px; height: 30px; background-color: {{ color }}; border: 1px solid #ddd;"></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <button type="submit"
+                                class="btn btn-primary mt-3">Save Theme</button>
+                        </form>
+
+                        {% if message %}
+                        <div class="alert alert-success mt-3" role="alert">
+                            {{ message }}
+                        </div>
+                        {% endif %}
+
+                        {% if error_message %}
+                        <div class="alert alert-danger mt-3" role="alert">
+                            Error: {{ error_message }}
+                        </div>
+                        {% endif %}
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Chart Keywords</h6>
+            </div>
+            <div class="card-body pl-8">
+                <div class="row pl-4">
+                    <p>Charts will be generated of questions with relevant keywords.</p>
+                    <div style="padding-top: 20px;"></div>
+                    <!-- Keyword Table -->
+                    <!-- Responsive Table Container with Limited Width -->
+                    <div class="table-responsive d-flex justify-content-start pl-2">
+                        <table class="table table-hover table-bordered w-auto">
+                            <tbody>
+                                {% for keyword in keywords %}
+                                <tr>
+                                    <td class="text-left">{{ keyword }}</td>
+                                    <td class="text-left">
+                                        <form action="{{ url_for('routemanager.delete_keyword', keyword=keyword) }}" method="POST" class="d-inline">
+                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Add Keyword Form -->
+                    <form action="{{ url_for('routemanager.save_keywords') }}"
+                        method="POST" class="mt-3">
+                        <div class="input-group">
+                            <input type="text" name="keyword"
+                                class="form-control"
+                                placeholder="Enter a new keyword" required>
+                            <div class="input-group-append">
+                                <button type="submit"
+                                    class="btn btn-success">Add Keyword</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- JavaScript to show the selected palette on change -->
+<script>
+function showSelectedPalette(themeName) {
+    const themes = {{ themes | tojson }};
+    const selectedTheme = themes.find(theme => theme.name === themeName);
+
+    if (selectedTheme) {
+        const colorPreview = document.getElementById("color-preview");
+        colorPreview.innerHTML = selectedTheme.colors.map(color =>
+            `<li class="list-inline-item" style="width: 30px; height: 30px; background-color: ${color}; border: 1px solid #ddd;"></li>`
+        ).join('');
+    }
+}
+</script>
+{% endblock %}

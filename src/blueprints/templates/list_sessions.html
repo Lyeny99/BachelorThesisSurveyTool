@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Limesurvey Tool{% endblock %}
+{% block header %}SESSION{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <!-- Left-Aligned Narrower Card -->
+  <div class="col-lg-6 col-md-8">
+      <div class="card shadow mb-4">
+          <div class="card-header py-3 d-flex flex-row justify-content-between">
+              <h6 class="m-0 font-weight-bold text-primary">AVAILABLE</h6>
+          </div>
+          <!-- Card Body -->
+          <div class="card-body">
+            <div class="chart-area table-responsive">
+                <div id="message-container">
+                    {% if message %}
+                    <div class="alert alert-success" role="alert">
+                        {{ message }}
+                    </div>
+                    {% endif %}
+
+                    {% if error_message %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error_message }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div style="padding-top: 20px;"></div>
+                {% if sessions %}
+                <p>ID: Date_SurveyId1-SurveyId2</p>
+                <table class="table table-hover">
+                    <tbody>
+                        {% for session in sessions %}
+                        <tr>
+                            <form action="/load_session/{{ session }}" method="POST">
+                                <td><span>{{ session }}</span></td>
+                                <td style="width: 100%"></td>
+                                <td><button type="submit" class="btn btn-primary mb-3">Load</button></td>
+                            </form>
+                            <td>
+                                {% if session == current_session_name %}
+                                <button class="btn btn-secondary mb-3" disabled>Delete</button>
+                                {% else %}
+                                <button class="btn btn-danger mb-3" onclick="confirmDelete('{{ session }}')">Delete</button>
+                                {% endif %}
+                            </td>
+                            <td style="width: 100%"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p>No sessions available.</p>
+                {% endif %}
+            </div>
+        </div>
+      </div>
+  </div>
+</div>
+
+<script>
+    function confirmDelete(sessionName) {
+        if (confirm(`Are you sure you want to delete the session "${sessionName}"?`)) {
+            // If confirmed, send a delete request
+            fetch(`/delete_session/${sessionName}`, {
+                method: 'DELETE',
+            })
+            .then(response => response.json())
+            .then(data => {
+                const messageContainer = document.getElementById('message-container');
+                if (data.success) {
+                    // Display the success message
+                    messageContainer.innerHTML = `<div class='alert alert-success' role='alert'>${data.message}</div>`;
+                    // Redirect to the list_sessions page after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = '/list_sessions?message=' + encodeURIComponent(data.message);
+                    }, 2000);
+                } else {
+                    // Display the error message
+                    messageContainer.innerHTML = `<div class='alert alert-danger' role='alert'>${data.error}</div>`;
+                }
+            })
+            .catch(error => {
+                const messageContainer = document.getElementById('message-container');
+                messageContainer.innerHTML = `<div class='alert alert-danger' role='alert'>Error: ${error}</div>`;
+            });
+        }
+    }
+    </script>
+
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Limesurvey Tool{% endblock %}
+{% block header %}General{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <!-- Area Chart -->
+    <div class="col-xl col-lg">
+        <div class="card shadow mb-4">
+            <div
+                class="card-header py-3 d-flex flex-row justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">WELCOME</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <div class="chart-area">
+                    <div class="container">
+                        <p>
+                            This tool helps you analyze survey data exported from LimeSurvey. Follow these simple steps to get started:
+                        </p>
+                        <ol>
+                            <li>
+                                <strong>Prepare Your Data:</strong> Export your survey data from LimeSurvey as CSV files.
+                                <span class="text-muted">(Under "Responses," choose "Export" and save as a CSV file. The default settings should work fine.)</span>
+                                For now it is only possible to compare 2 Survey groups with each other (2 Files!).
+                            </li>
+                            <li>
+                                <strong>Upload Surveys:</strong> Go to the <a href="/survey">Survey</a> page and upload the exported files.
+                            </li>
+                            <li>
+                                <strong>View Analysis:</strong> After uploading, navigate to the <a href="/analysis">Analysis</a> and <a href="/graphs">Graphs</a> pages to explore results and visualizations.
+                            </li>
+                            <li>
+                                <strong>Customize Settings:</strong> Adjust color schemes and keywords for charts on the <a href="/settings">Settings</a> page.
+                            </li>
+                            <li>
+                                <strong>Manage Sessions:</strong> Find and reload previous sessions on the <a href="/list_sessions">Sessions</a> page. Sessions are saved automatically while you work.
+                            </li>
+                        </ol>
+                        <p>
+                            Explore the features and gain valuable insights from your survey data. If you encounter any issues, check the logfile.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
