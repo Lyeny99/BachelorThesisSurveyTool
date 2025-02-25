@@ -3,6 +3,32 @@
 {% block header %}ANALYSIS{% endblock %}
 
 {% block content %}
+{% if isNormalized != "EMPTY" %}
+<div class="row">
+    <div class="col-xl col-lg">
+        <div class="card shadow mb-4">
+            <div
+                class="card-header py-3 d-flex flex-row justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">DATA NORMALIZATION</h6>
+            </div>
+            <div class="card-body">
+                <p>The Shapiro-Wilk test has been applied to determine if the dataset follows a normal distribution. The normalization status of the given dataset is:</p>
+
+                {% if isNormalized == "NORMALIZED" %}
+                <div class="font-weight-bold text-muted">
+                    <i class="fas fa-check-circle"></i> Normalized
+                </div>
+                {% else %}
+                <div class="font-weight-bold text-muted">
+                    <i class="fas fa-times-circle"></i> Not Normalized
+                </div>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endif %}
 
 <div class="row">
     <div class="col-xl col-lg">

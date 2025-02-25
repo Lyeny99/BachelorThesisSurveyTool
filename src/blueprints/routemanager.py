@@ -45,6 +45,7 @@ survey_2_in_memory = Survey(
 
 global_results = pd.DataFrame()
 global_summary_table = None
+isNormalized = "EMPTY"
 
 current_session_name = ""
 image_path = os.getcwd() + "/static/images/"
@@ -273,7 +274,7 @@ def loadsurveyfromfile():
 def perform_analysis():
     logger.info("Entered perform_analysis function.")
     try:
-        global global_results, global_summary_table
+        global global_results, global_summary_table, isNormalized
 
         if survey_1_in_memory.dataframe.empty or survey_2_in_memory.dataframe.empty:
             logger.error("No survey data available for analysis.")
@@ -289,7 +290,7 @@ def perform_analysis():
         # Step 2: Perform hypothesis testing
         logger.info("Performing hypothesis testing.")
         analyser = Analysis(alpha=alpha)
-        hypothesis_results = analyser.perform_hypothesis_testing(
+        hypothesis_results, isNormalized = analyser.perform_hypothesis_testing(
             survey_1_in_memory, survey_2_in_memory, matched_pairs, test_method
         )
 
@@ -356,6 +357,7 @@ def analysis():
             test_method=test_method,
             message=message,
             status=status,
+            isNormalized=isNormalized
         )
 
     logger.info("Rendering analysis page without recalculation.")
@@ -366,6 +368,7 @@ def analysis():
         survey2=survey_2_in_memory,
         alpha=alpha,
         test_method=test_method,
+        isNormalized=isNormalized
     )
 
 
@@ -672,7 +675,8 @@ def list_sessions():
 def load_session_by_name(session_name: str):
     logger.info(f"Entered load_session_by_name function for session: {session_name}")
     try:
-        global survey_1_in_memory, survey_2_in_memory, global_summary_table, global_results, selected_theme, current_session_name, alpha, test_method
+        global survey_1_in_memory, survey_2_in_memory, global_summary_table, global_results, selected_theme, current_session_name, alpha, test_method, isNormalized
+        
         session_path = sessions_path + session_name
         logger.info(f"Loading session from: {session_path}")
         state = load_session_state(session_path)
@@ -682,6 +686,7 @@ def load_session_by_name(session_name: str):
         global_summary_table = state["global_summary_table"]
         global_results = state.get("global_results", {})
         current_session_name = session_name
+        isNormalized = state["isNormalized"]
 
         theme_name = state.get("selected_theme_name")
         selected_theme = next(
@@ -739,6 +744,7 @@ def save_session():
             "test_method": test_method
             if test_method is not None
             else DEFAULT_TEST_METHOD,
+            "isNormalized": isNormalized
         }
 
         save_path = sessions_path + current_session_name
@@ -779,6 +785,8 @@ def update_session():
             state["alpha"] = alpha
         if test_method is not None:
             state["test_method"] = test_method
+            
+        state["isNormalized"] = isNormalized
 
         logger.debug("Updating session state.")
         save_session_state(state, session_path)

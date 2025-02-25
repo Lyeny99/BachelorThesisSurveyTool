@@ -29,6 +29,7 @@ class Analysis:
         """
         logger.info("Starting hypothesis testing.")
         results = []
+        isNormalized = False
         for pair in matched_pairs:
             logger.debug(f"Processing question pair: {pair}")
             try:
@@ -65,6 +66,11 @@ class Analysis:
                     )
                     continue
 
+                # normalized?
+                p1, p2 = shapiro(data1)[1], shapiro(data2)[1]
+                if p1 > self.alpha and p2 > self.alpha:
+                    isNormalized = True
+                    
                 # [1] -> to only get p-value from results
                 if test_method == "t-test":
                     test_type, p_value = (
@@ -80,8 +86,7 @@ class Analysis:
                         wilcoxon(data1.iloc[:min_len], data2.iloc[:min_len])[1],
                     )
                 else:
-                    p1, p2 = shapiro(data1)[1], shapiro(data2)[1]
-                    if p1 > self.alpha and p2 > self.alpha:
+                    if isNormalized:
                         test_type, p_value = (
                             "t-test",
                             ttest_ind(data1, data2, equal_var=True)[1],
@@ -117,8 +122,9 @@ class Analysis:
             except Exception as e:
                 logger.error(f"Error processing pair {pair}: {e}", exc_info=True)
 
+        normalization = "NORMALIZED" if isNormalized else "NOT NORMALIZED"
         logger.info("Hypothesis testing completed.")
-        return pd.DataFrame(results)
+        return pd.DataFrame(results), normalization
 
     def is_numeric_or_binary(self, data):
         """
