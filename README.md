@@ -106,6 +106,10 @@ Logs are implemented using Loguru and stored in the `logs` directory. Logging in
 - Information on major actions (e.g., data processing, chart generation).
 - Debug-level details for troubleshooting.
 
+## Theme
+Start Bootstrap LLC is providing the SB Admin 2 Bootstrap theme, which is used for this project.
+Theme can be checked out at: https://startbootstrap.com/theme/sb-admin-2
+
 ## Contributing
 1. Fork the repository.
 2. Create a feature branch:
@@ -125,3 +129,4 @@ This project is licensed under the MIT License. See the LICENSE file for details
 - [Pandas](https://pandas.pydata.org/)
 - [Matplotlib](https://matplotlib.org/)
 - [Loguru](https://github.com/Delgan/loguru)
+- [SB Admin 2](https://github.com/startbootstrap/startbootstrap-sb-admin-2)
